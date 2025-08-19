@@ -1,0 +1,10 @@
+{
+    "name": "Plate Picker",
+    "short_name": "Plates",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#0b0c10",
+    "theme_color": "#1e88e5",
+    "icons": []
+  }
+  

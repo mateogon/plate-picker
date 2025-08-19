@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Plate Picker — estático</title>
+  <link rel="manifest" href="./site.webmanifest" />
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+</head>
+<body>
+<header><h1>Plate Picker — precalculado (barra 20 kg)</h1></header>
+
+<main>
+  <section class="card">
+    <div class="toolbar">
+      <div>
+        <label for="mode">Modo</label>
+        <select id="mode">
+          <option value="exact">Peso exacto</option>
+          <option value="range">Rango</option>
+        </select>
+      </div>
+
+      <div id="exactBox">
+        <label for="exactKg">Peso total (kg)</label>
+        <input id="exactKg" type="number" step="0.01" value="132.5" />
+      </div>
+
+      <div id="rangeBox" style="display:none">
+        <div class="row">
+          <div>
+            <label for="minKg">Desde (kg)</label>
+            <input id="minKg" type="number" step="0.1" value="120" />
+          </div>
+          <div>
+            <label for="maxKg">Hasta (kg)</label>
+            <input id="maxKg" type="number" step="0.1" value="140" />
+          </div>
+          <div>
+            <label for="stepKg">Step (kg)</label>
+            <input id="stepKg" type="number" step="0.1" value="0.5" />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label for="tol">Tolerancia (kg)</label>
+        <input id="tol" type="number" step="0.01" value="0.05" />
+      </div>
+
+      <div>
+        <label for="capPerWeight">Opciones por peso (cap)</label>
+        <input id="capPerWeight" type="number" min="1" max="50" value="6" />
+      </div>
+
+      <div>
+        <label for="emptyPolicy">Totales sin combos</label>
+        <select id="emptyPolicy">
+          <option value="hide">Ocultar</option>
+          <option value="show">Mostrar</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="sortResults">Orden resultados</label>
+        <select id="sortResults">
+          <option value="asc">kg ↑</option>
+          <option value="desc">kg ↓</option>
+          <option value="closest">± a meta</option>
+          <option value="farthest">lejos de meta</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="sortCombos">Orden combos</label>
+        <select id="sortCombos">
+          <option value="default">predeterminado</option>
+          <option value="fewest">menos discos</option>
+          <option value="most">más discos</option>
+        </select>
+      </div>
+
+      <div>
+        <button id="go">Buscar</button>
+      </div>
+    </div>
+
+    <p class="hint">
+      El dataset es estático; se hace match por tolerancia contra los totales precalculados.
+      Las placas se muestran por lado (pesado → liviano).
+    </p>
+  </section>
+
+  <section id="results" class="results grid"></section>
+</main>
+
+<footer><small>Static Plate Picker — sin backend • Sirve por HTTP / GitHub Pages</small></footer>
+
+<script type="module" src="./assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+:root{
+    --bg:#0b0c10; --fg:#e7eaef; --muted:#9aa0a6;
+    --card:#151821; --edge:#242a35; --accent:#64b5f6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px system-ui,Segoe UI,Roboto,Helvetica,Arial}
+  header{padding:18px 16px;border-bottom:1px solid var(--edge)}
+  header h1{margin:0;font-size:18px}
+  main{max-width:1100px;margin:0 auto;padding:16px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:12px;padding:14px}
+  label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
+  input,select,button{background:#0f1219;color:var(--fg);border:1px solid var(--edge);border-radius:10px;padding:10px}
+  input[type="number"]{width:130px}
+  button{cursor:pointer;background:#1e88e5;border:none}
+  button:hover{filter:brightness(1.07)}
+  .hint{font-size:12px;color:var(--muted);margin-top:6px}
+  .grid{display:grid;gap:12px}
+  .results{margin-top:16px}
+  .result{display:grid;grid-template-columns:160px 1fr;gap:10px;padding:12px;border:1px solid var(--edge);border-radius:12px;background:#10131a}
+  .weight{display:flex;align-items:center;justify-content:center;background:#0f1219;border:1px solid var(--edge);border-radius:10px;font-weight:700;padding:6px}
+  .plates{display:flex;flex-direction:column;gap:8px}
+  .line{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{min-width:62px;display:flex;align-items:center;justify-content:center;padding:6px 8px;border:1px solid rgba(0,0,0,.35);border-radius:10px;font-weight:700}
+  .muted{color:var(--muted)}
+  footer{opacity:.7;text-align:center;padding:20px 0}
+  
+  /* badges para diferencia vs objetivo */
+  .badge{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid rgba(0,0,0,.35);font-size:12px;margin-left:8px}
+  .badge.ok{background:#1b5e20;color:#e8f5e9;border-color:#0b3d0e}
+  .badge.warn{background:#7f6000;color:#fff7e6;border-color:#5c4300}
+  .badge.miss{background:#6a1b1b;color:#ffebee;border-color:#3e0f0f}
+  
+  /* responsive */
+  @media (max-width: 700px){
+    .result{grid-template-columns:1fr}
+    .weight{justify-content:flex-start;padding-left:12px}
+  }
+  
