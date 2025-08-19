@@ -68,16 +68,27 @@
           <option value="desc">kg ↓</option>
           <option value="closest">± a meta</option>
           <option value="farthest">lejos de meta</option>
+          <option value="plates">menos discos</option>
         </select>
       </div>
 
-      <div>
-        <label for="sortCombos">Orden combos</label>
-        <select id="sortCombos">
-          <option value="default">predeterminado</option>
-          <option value="fewest">menos discos</option>
-          <option value="most">más discos</option>
-        </select>
+      <div class="row">
+        <div>
+          <label for="minPlates">Discos mín</label>
+          <div class="counter">
+            <button id="minPlatesDec" type="button">-</button>
+            <input id="minPlates" type="number" value="0" />
+            <button id="minPlatesInc" type="button">+</button>
+          </div>
+        </div>
+        <div>
+          <label for="maxPlates">Discos máx</label>
+          <div class="counter">
+            <button id="maxPlatesDec" type="button">-</button>
+            <input id="maxPlates" type="number" value="0" />
+            <button id="maxPlatesInc" type="button">+</button>
+          </div>
+        </div>
       </div>
 
       <div>
