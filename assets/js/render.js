@@ -1,12 +1,10 @@
 import { fontContrast, fmt } from "./utils.js";
 import { DATA } from "./data.js";
-import { sortCombosInCard } from "./search.js";
 
 // Renderiza tarjetas en #results
 export function render(resultsRoot, items, opts = {}){
   const plates = DATA.meta.plates;
   const target = (opts && typeof opts.target === "number") ? opts.target : null;
-  const comboSort = (opts && opts.comboSort) ? opts.comboSort : "default";
   const emptyPolicy = (opts && opts.emptyPolicy) || "hide";
 
   resultsRoot.innerHTML = "";
@@ -44,9 +42,7 @@ export function render(resultsRoot, items, opts = {}){
       continue;
     }
 
-    const combosSorted = sortCombosInCard(row.combos, comboSort);
-
-    for (const combo of combosSorted){
+    for (const combo of row.combos){
       const line = document.createElement("div");
       line.className = "line";
       for (const idx of combo){

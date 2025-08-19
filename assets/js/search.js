@@ -16,7 +16,7 @@ export function nearestKeys(keys, target, tol){
     return arr;
   }
   
-  export function sortResultsArray(items, mode, target){
+export function sortResultsArray(items, mode, target){
     const arr = items.slice();
     if (mode === "asc") arr.sort((a,b)=> a.kg - b.kg);
     else if (mode === "desc") arr.sort((a,b)=> b.kg - a.kg);
@@ -24,15 +24,15 @@ export function nearestKeys(keys, target, tol){
       arr.sort((a,b)=> Math.abs(a.kg - target) - Math.abs(b.kg - target));
     else if (mode === "farthest" && typeof target === "number")
       arr.sort((a,b)=> Math.abs(b.kg - target) - Math.abs(a.kg - target));
+    else if (mode === "plates")
+      arr.sort((a,b)=> {
+        const diff = a.minPlates - b.minPlates;
+        if (diff !== 0) return diff;
+        if (typeof target === "number")
+          return Math.abs(a.kg - target) - Math.abs(b.kg - target);
+        return a.kg - b.kg;
+      });
     else arr.sort((a,b)=> a.kg - b.kg);
     return arr;
-  }
-  
-  export function sortCombosInCard(combos, mode){
-    const out = combos.slice();
-    if (mode === "fewest") out.sort((a,b)=> a.length - b.length);
-    else if (mode === "most") out.sort((a,b)=> b.length - a.length);
-    // 'default': respeta el orden del JSON (ya rankeado en el generador)
-    return out;
   }
   
