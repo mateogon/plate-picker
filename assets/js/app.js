@@ -1,7 +1,7 @@
 import { loadData, DATA, INDEX } from "./data.js";
 import { nearestKeys, rangeKeys, sortResultsArray } from "./search.js";
 import { render } from "./render.js";
-import { loadState, bindStateAutosave } from "./state.js";
+import { loadState, bindStateAutosave, saveState } from "./state.js";
 
 const $ = (id) => document.getElementById(id);
 const modeSel = $("mode");
@@ -25,7 +25,7 @@ modeSel.addEventListener("change", ()=>{
   rangeBox.style.display = isRange ? "" : "none";
 });
 
-function runSearch(){
+function runSearch(resetRange = true){
   if (!DATA){ alert("Cargando datos…"); return; }
   const cap = parseInt(capPerWeight?.value || "6", 10);
   const emptyPol = emptyPolicy?.value || "hide";
@@ -67,11 +67,17 @@ function runSearch(){
   }
   minPlates.min = minGlobal; minPlates.max = maxGlobal;
   maxPlates.min = minGlobal; maxPlates.max = maxGlobal;
-  let minVal = parseInt(minPlates.value || minGlobal, 10);
-  let maxVal = parseInt(maxPlates.value || maxGlobal, 10);
-  if (minVal < minGlobal) minVal = minGlobal;
-  if (maxVal > maxGlobal) maxVal = maxGlobal;
-  if (minVal > maxVal) maxVal = minVal;
+  let minVal, maxVal;
+  if (resetRange){
+    minVal = minGlobal;
+    maxVal = maxGlobal;
+  } else {
+    minVal = parseInt(minPlates.value || minGlobal, 10);
+    maxVal = parseInt(maxPlates.value || maxGlobal, 10);
+    if (minVal < minGlobal) minVal = minGlobal;
+    if (maxVal > maxGlobal) maxVal = maxGlobal;
+    if (minVal > maxVal) maxVal = minVal;
+  }
   minPlates.value = String(minVal);
   maxPlates.value = String(maxVal);
 
@@ -80,12 +86,13 @@ function runSearch(){
   // Ordena resultados (tarjetas)
   const items = sortResultsArray(itemsFiltered, sortResMode, target);
   render(results, items, { target, emptyPolicy: emptyPol });
+  saveState();
 }
 
-$("go").addEventListener("click", runSearch);
+$("go").addEventListener("click", () => runSearch(true));
 
-minPlates?.addEventListener("change", () => runSearch());
-maxPlates?.addEventListener("change", () => runSearch());
+minPlates?.addEventListener("change", () => runSearch(false));
+maxPlates?.addEventListener("change", () => runSearch(false));
 
 // Inicialización
 (async function init(){
