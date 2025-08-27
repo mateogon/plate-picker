@@ -26,6 +26,13 @@ modeSel.addEventListener("change", ()=>{
 });
 
 
+function runSearch(resetRange = true){
+  if (!DATA){ alert("Cargando datos…"); return; }
+  const cap = parseInt(capPerWeight?.value || "6", 10);
+  const emptyPol = emptyPolicy?.value || "hide";
+  const sortResMode = sortResults?.value || "asc";
+
+
   let keys = [];
   let target = null;
 
@@ -44,15 +51,11 @@ modeSel.addEventListener("change", ()=>{
   for (const k of keys){
     const entry = INDEX.byKey.get(k.toFixed(2));
     if (!entry) continue;
-
-    const combos = (entry.combos || [])
-      .slice() // copia para no mutar el dataset original
-      .sort((a,b)=> a.length - b.length)
-      .slice(0, cap);
+    const combos = (entry.combos || []).slice(0, cap);
     itemsRaw.push({
       kg: entry.kg,
       combos,
-      minPlates: combos.length ? combos[0].length : Infinity
+      minPlates: combos.length ? Math.min(...combos.map(c => c.length)) : Infinity
 
     });
   }
