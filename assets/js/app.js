@@ -17,6 +17,7 @@ const sortResults = $("sortResults");
 const results = $("results");
 const minPlates = $("minPlates");
 const maxPlates = $("maxPlates");
+const unitFilterSel = $("unitFilter");
 
 modeSel.addEventListener("change", ()=>{
   const isRange = modeSel.value === "range";
@@ -27,7 +28,8 @@ modeSel.addEventListener("change", ()=>{
 function runSearch(resetRange = true){
   if (!DATA){ alert("Cargando datos…"); return; }
   const cap = parseInt(capPerWeight?.value || "6", 10);
-  const sortResMode = sortResults?.value || "asc";
+  const sortResMode = sortResults?.value || "closest_plates";
+  const unitFilter = unitFilterSel?.value || "any";
 
   let keys = [];
   let target = null;
@@ -47,7 +49,17 @@ function runSearch(resetRange = true){
   for (const k of keys){
     const entry = INDEX.byKey.get(k.toFixed(2));
     if (!entry) continue;
+    // filtra combos por unidades permitidas
+    const allowedFams = unitFilter === "any" ? null : new Set([unitFilter]);
     const combos = (entry.combos || [])
+      .filter((combo)=>{
+        if (!allowedFams) return true;
+        for (const idx of combo){
+          const fam = DATA.meta.plates[idx]?.fam;
+          if (!allowedFams.has(fam)) return false;
+        }
+        return true;
+      })
       .slice() // copia para no mutar el dataset original
       .sort((a,b)=> a.length - b.length)
       .slice(0, cap);
@@ -94,6 +106,7 @@ $("go").addEventListener("click", () => runSearch(true));
 
 minPlates?.addEventListener("change", () => runSearch(false));
 maxPlates?.addEventListener("change", () => runSearch(false));
+unitFilterSel?.addEventListener("change", () => runSearch(true));
 
 // Inicialización
 (async function init(){

@@ -1,7 +1,7 @@
 // Persistencia simple de opciones en localStorage
 const STATE_KEYS = [
     "mode","exactKg","minKg","maxKg","stepKg",
-    "tol","capPerWeight","sortResults","minPlates","maxPlates"
+    "tol","capPerWeight","sortResults","unitFilter","minPlates","maxPlates"
   ];
   
   export function loadState(){
