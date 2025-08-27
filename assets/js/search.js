@@ -18,13 +18,38 @@ export function nearestKeys(keys, target, tol){
   
 export function sortResultsArray(items, mode, target){
     const arr = items.slice();
-    if (mode === "asc") arr.sort((a,b)=> a.kg - b.kg);
-    else if (mode === "desc") arr.sort((a,b)=> b.kg - a.kg);
-    else if (mode === "closest" && typeof target === "number")
-      arr.sort((a,b)=> Math.abs(a.kg - target) - Math.abs(b.kg - target));
-    else if (mode === "farthest" && typeof target === "number")
-      arr.sort((a,b)=> Math.abs(b.kg - target) - Math.abs(a.kg - target));
-    else if (mode === "plates")
+    if (mode === "asc") {
+      arr.sort((a,b)=> {
+        const diff = a.kg - b.kg;
+        if (diff !== 0) return diff;
+        return a.minPlates - b.minPlates;
+      });
+    }
+    else if (mode === "desc") {
+      arr.sort((a,b)=> {
+        const diff = b.kg - a.kg;
+        if (diff !== 0) return diff;
+        return a.minPlates - b.minPlates;
+      });
+    }
+    else if (mode === "closest" && typeof target === "number") {
+      arr.sort((a,b)=> {
+        const da = Math.abs(a.kg - target);
+        const db = Math.abs(b.kg - target);
+        if (da !== db) return da - db;
+        return a.minPlates - b.minPlates;
+      });
+    }
+    else if (mode === "farthest" && typeof target === "number") {
+      arr.sort((a,b)=> {
+        const da = Math.abs(a.kg - target);
+        const db = Math.abs(b.kg - target);
+        if (da !== db) return db - da;
+        return a.minPlates - b.minPlates;
+      });
+    }
+    else if (mode === "plates") {
+
       arr.sort((a,b)=> {
         const diff = a.minPlates - b.minPlates;
         if (diff !== 0) return diff;
@@ -32,7 +57,11 @@ export function sortResultsArray(items, mode, target){
           return Math.abs(a.kg - target) - Math.abs(b.kg - target);
         return a.kg - b.kg;
       });
-    else arr.sort((a,b)=> a.kg - b.kg);
+    }
+    else {
+      arr.sort((a,b)=> a.kg - b.kg);
+    }
+
     return arr;
   }
   
