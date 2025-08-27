@@ -1,7 +1,7 @@
 import { loadData, DATA, INDEX } from "./data.js";
 import { nearestKeys, rangeKeys, sortResultsArray } from "./search.js";
 import { render } from "./render.js";
-import { loadState, bindStateAutosave, saveState } from "./state.js";
+import { loadState, bindStateAutosave } from "./state.js";
 
 const $ = (id) => document.getElementById(id);
 const modeSel = $("mode");
@@ -18,6 +18,10 @@ const sortResults = $("sortResults");
 const results = $("results");
 const minPlates = $("minPlates");
 const maxPlates = $("maxPlates");
+const minPlatesDec = $("minPlatesDec");
+const minPlatesInc = $("minPlatesInc");
+const maxPlatesDec = $("maxPlatesDec");
+const maxPlatesInc = $("maxPlatesInc");
 
 modeSel.addEventListener("change", ()=>{
   const isRange = modeSel.value === "range";
@@ -25,13 +29,11 @@ modeSel.addEventListener("change", ()=>{
   rangeBox.style.display = isRange ? "" : "none";
 });
 
-
-function runSearch(resetRange = true){
+function runSearch(){
   if (!DATA){ alert("Cargando datos…"); return; }
-  const cap = parseInt(capPerWeight?.value || "6", 10);
-  const emptyPol = emptyPolicy?.value || "hide";
-  const sortResMode = sortResults?.value || "asc";
-
+  const cap = parseInt(capPerWeight.value || "6", 10);
+  const emptyPol = emptyPolicy.value;
+  const sortResMode = sortResults.value;
 
   let keys = [];
   let target = null;
@@ -56,7 +58,6 @@ function runSearch(resetRange = true){
       kg: entry.kg,
       combos,
       minPlates: combos.length ? Math.min(...combos.map(c => c.length)) : Infinity
-
     });
   }
 
@@ -70,18 +71,11 @@ function runSearch(resetRange = true){
   }
   minPlates.min = minGlobal; minPlates.max = maxGlobal;
   maxPlates.min = minGlobal; maxPlates.max = maxGlobal;
-  let minVal, maxVal;
-  if (resetRange){
-    minVal = minGlobal;
-    maxVal = maxGlobal;
-  } else {
-    minVal = parseInt(minPlates.value || minGlobal, 10);
-    maxVal = parseInt(maxPlates.value || maxGlobal, 10);
-    if (minVal < minGlobal) minVal = minGlobal;
-    if (maxVal > maxGlobal) maxVal = maxGlobal;
-    if (minVal > maxVal) maxVal = minVal;
-  }
-
+  let minVal = parseInt(minPlates.value || minGlobal, 10);
+  let maxVal = parseInt(maxPlates.value || maxGlobal, 10);
+  if (minVal < minGlobal) minVal = minGlobal;
+  if (maxVal > maxGlobal) maxVal = maxGlobal;
+  if (minVal > maxVal) maxVal = minVal;
   minPlates.value = String(minVal);
   maxPlates.value = String(maxVal);
 
@@ -90,13 +84,33 @@ function runSearch(resetRange = true){
   // Ordena resultados (tarjetas)
   const items = sortResultsArray(itemsFiltered, sortResMode, target);
   render(results, items, { target, emptyPolicy: emptyPol });
-  saveState();
 }
 
-$("go").addEventListener("click", () => runSearch(true));
+$("go").addEventListener("click", runSearch);
 
-minPlates?.addEventListener("change", () => runSearch(false));
-maxPlates?.addEventListener("change", () => runSearch(false));
+function adjustAndRun(inp, delta){
+  let val = parseInt(inp.value || "0", 10) + delta;
+  const mn = parseInt(inp.min || "0", 10);
+  const mx = parseInt(inp.max || "0", 10);
+  if (val < mn) val = mn;
+  if (val > mx) val = mx;
+  inp.value = String(val);
+  if (inp === minPlates && val > parseInt(maxPlates.value || "0", 10)) {
+    maxPlates.value = String(val);
+    maxPlates.dispatchEvent(new Event("change"));
+  }
+  if (inp === maxPlates && val < parseInt(minPlates.value || "0", 10)) {
+    minPlates.value = String(val);
+    minPlates.dispatchEvent(new Event("change"));
+  }
+  inp.dispatchEvent(new Event("change"));
+  runSearch();
+}
+
+minPlatesDec.addEventListener("click", ()=>adjustAndRun(minPlates,-1));
+minPlatesInc.addEventListener("click", ()=>adjustAndRun(minPlates,1));
+maxPlatesDec.addEventListener("click", ()=>adjustAndRun(maxPlates,-1));
+maxPlatesInc.addEventListener("click", ()=>adjustAndRun(maxPlates,1));
 
 // Inicialización
 (async function init(){
