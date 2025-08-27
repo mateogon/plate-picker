@@ -64,6 +64,7 @@
       <div>
         <label for="sortResults">Orden resultados</label>
         <select id="sortResults">
+          <option value="plates" selected>menos discos</option>
           <option value="asc">kg ↑</option>
           <option value="desc">kg ↓</option>
           <option value="closest">± a meta</option>
@@ -71,13 +72,15 @@
         </select>
       </div>
 
-      <div>
-        <label for="sortCombos">Orden combos</label>
-        <select id="sortCombos">
-          <option value="default">predeterminado</option>
-          <option value="fewest">menos discos</option>
-          <option value="most">más discos</option>
-        </select>
+      <div class="row">
+        <div>
+          <label for="minPlates">Discos mín</label>
+          <input id="minPlates" type="number" value="0" />
+        </div>
+        <div>
+          <label for="maxPlates">Discos máx</label>
+          <input id="maxPlates" type="number" value="0" />
+        </div>
       </div>
 
       <div>
