@@ -25,11 +25,6 @@ modeSel.addEventListener("change", ()=>{
   rangeBox.style.display = isRange ? "" : "none";
 });
 
-function runSearch(resetRange = true){
-  if (!DATA){ alert("Cargando datos…"); return; }
-  const cap = parseInt(capPerWeight?.value || "6", 10);
-  const emptyPol = emptyPolicy?.value || "hide";
-  const sortResMode = sortResults?.value || "asc";
 
   let keys = [];
   let target = null;
@@ -49,6 +44,7 @@ function runSearch(resetRange = true){
   for (const k of keys){
     const entry = INDEX.byKey.get(k.toFixed(2));
     if (!entry) continue;
+
     const combos = (entry.combos || [])
       .slice() // copia para no mutar el dataset original
       .sort((a,b)=> a.length - b.length)
@@ -57,6 +53,7 @@ function runSearch(resetRange = true){
       kg: entry.kg,
       combos,
       minPlates: combos.length ? combos[0].length : Infinity
+
     });
   }
 
@@ -81,6 +78,7 @@ function runSearch(resetRange = true){
     if (maxVal > maxGlobal) maxVal = maxGlobal;
     if (minVal > maxVal) maxVal = minVal;
   }
+
   minPlates.value = String(minVal);
   maxPlates.value = String(maxVal);
 

@@ -49,6 +49,7 @@ export function sortResultsArray(items, mode, target){
       });
     }
     else if (mode === "plates") {
+
       arr.sort((a,b)=> {
         const diff = a.minPlates - b.minPlates;
         if (diff !== 0) return diff;
@@ -60,6 +61,7 @@ export function sortResultsArray(items, mode, target){
     else {
       arr.sort((a,b)=> a.kg - b.kg);
     }
+
     return arr;
   }
   
