@@ -13,7 +13,6 @@ const maxKg = $("maxKg");
 const stepKg = $("stepKg"); // (por ahora no se usa en el filtrado, solo vista)
 const tolInp = $("tol");
 const capPerWeight = $("capPerWeight");
-const emptyPolicy = $("emptyPolicy");
 const sortResults = $("sortResults");
 const results = $("results");
 const minPlates = $("minPlates");
@@ -28,7 +27,6 @@ modeSel.addEventListener("change", ()=>{
 function runSearch(resetRange = true){
   if (!DATA){ alert("Cargando datos…"); return; }
   const cap = parseInt(capPerWeight?.value || "6", 10);
-  const emptyPol = emptyPolicy?.value || "hide";
   const sortResMode = sortResults?.value || "asc";
 
   let keys = [];
@@ -88,7 +86,7 @@ function runSearch(resetRange = true){
 
   // Ordena resultados (tarjetas)
   const items = sortResultsArray(itemsFiltered, sortResMode, target);
-  render(results, items, { target, emptyPolicy: emptyPol });
+  render(results, items, { target });
   saveState();
 }
 

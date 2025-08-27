@@ -5,7 +5,6 @@ import { DATA } from "./data.js";
 export function render(resultsRoot, items, opts = {}){
   const plates = DATA.meta.plates;
   const target = (opts && typeof opts.target === "number") ? opts.target : null;
-  const emptyPolicy = (opts && opts.emptyPolicy) || "hide";
 
   resultsRoot.innerHTML = "";
 
@@ -30,17 +29,7 @@ export function render(resultsRoot, items, opts = {}){
     const pdiv = document.createElement("div");
     pdiv.className = "plates";
 
-    if (!row.combos || row.combos.length === 0){
-      if (emptyPolicy === "show"){
-        const span = document.createElement("span");
-        span.className = "muted";
-        span.textContent = "Sin combinaciones (no hay en el dataset para este valor).";
-        pdiv.appendChild(span);
-        card.appendChild(pdiv);
-        resultsRoot.appendChild(card);
-      }
-      continue;
-    }
+    if (!row.combos || row.combos.length === 0) continue;
 
     for (const combo of row.combos){
       const line = document.createElement("div");
