@@ -91,6 +91,10 @@
       <div>
         <button id="go">Buscar</button>
       </div>
+
+      <div>
+        <button id="openConfig" type="button">Ajustes</button>
+      </div>
     </div>
 
     <p class="hint">
@@ -100,6 +104,23 @@
   </section>
 
   <section id="results" class="results grid"></section>
+
+  <section id="configModal" class="config-modal" aria-hidden="true">
+    <div class="config-modal__backdrop" data-close="true"></div>
+    <div class="config-modal__panel" role="dialog" aria-labelledby="configTitle">
+      <header class="config-modal__header">
+        <div>
+          <h2 id="configTitle">Disponibilidad y reglas</h2>
+          <p class="hint">Ajusta la disponibilidad de discos y las preferencias del generador; se guardan en este navegador.</p>
+        </div>
+        <button id="closeConfig" type="button" aria-label="Cerrar ajustes">×</button>
+      </header>
+      <div id="configEditor" class="config-modal__content"></div>
+      <div class="settings-actions">
+        <button id="configReset" type="button">Resetear defaults</button>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer><small>Static Plate Picker — sin backend • Sirve por HTTP / GitHub Pages</small></footer>

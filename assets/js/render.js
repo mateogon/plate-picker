@@ -34,6 +34,10 @@ export function render(resultsRoot, items, opts = {}){
     for (const combo of row.combos){
       const line = document.createElement("div");
       line.className = "line";
+
+      const chipsWrap = document.createElement("div");
+      chipsWrap.className = "line-chips";
+      const labels = [];
       for (const idx of combo){
         const pl = plates[idx];
         const chip = document.createElement("span");
@@ -41,8 +45,48 @@ export function render(resultsRoot, items, opts = {}){
         chip.style.background = pl.color;
         chip.style.color = fontContrast(pl.color);
         chip.textContent = pl.label;
-        line.appendChild(chip);
+        chipsWrap.appendChild(chip);
+        labels.push(pl.label);
       }
+
+      line.appendChild(chipsWrap);
+
+      const copyText = labels.join(" ");
+      const copyBtn = document.createElement("button");
+      copyBtn.type = "button";
+      copyBtn.className = "copy-btn";
+      copyBtn.textContent = "Copiar";
+
+      let resetTimer = null;
+      copyBtn.addEventListener("click", async () => {
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText){
+            await navigator.clipboard.writeText(copyText);
+          } else {
+            const ta = document.createElement("textarea");
+            ta.value = copyText;
+            ta.setAttribute("readonly", "");
+            ta.style.position = "absolute";
+            ta.style.left = "-9999px";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+          }
+          copyBtn.textContent = "Copiado";
+        } catch (err) {
+          copyBtn.textContent = "Error";
+        }
+
+        if (resetTimer){
+          clearTimeout(resetTimer);
+        }
+        resetTimer = setTimeout(() => {
+          copyBtn.textContent = "Copiar";
+        }, 1600);
+      });
+
+      line.appendChild(copyBtn);
       pdiv.appendChild(line);
     }
 

@@ -3,7 +3,6 @@ const CACHE_NAME = "plate-picker-v1";
 const ASSETS = [
   "./",
   "./index.html",
-  "./combos.json",
   "./site.webmanifest",
   "./assets/css/styles.css",
   "./assets/js/app.js",
@@ -11,6 +10,7 @@ const ASSETS = [
   "./assets/js/data.js",
   "./assets/js/search.js",
   "./assets/js/render.js",
+  "./assets/js/generator.js",
   "./assets/js/utils.js"
 ];
 

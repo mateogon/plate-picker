@@ -1,21 +1,3 @@
-// Búsquedas y ordenamientos
-export function nearestKeys(keys, target, tol){
-    const arr = [];
-    for (const k of keys){
-      if (Math.abs(k - target) <= tol + 1e-9) arr.push(k);
-    }
-    // el orden final lo decide sortResultsArray (closest/farthest)
-    return arr;
-  }
-  
-  export function rangeKeys(keys, a, b){
-    const arr = [];
-    for (const k of keys){
-      if (k >= a - 1e-9 && k <= b + 1e-9) arr.push(k);
-    }
-    return arr;
-  }
-  
 export function sortResultsArray(items, mode, target){
   const arr = items.slice();
   if (mode === "asc") arr.sort((a,b)=> a.kg - b.kg);
