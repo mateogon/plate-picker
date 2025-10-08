@@ -16,31 +16,28 @@
       <div>
         <label for="mode">Modo</label>
         <select id="mode">
-          <option value="exact">Peso exacto</option>
-          <option value="range">Rango</option>
+          <option value="weight">Peso exacto</option>
+          <option value="percent">Porcentaje de RM</option>
         </select>
       </div>
 
       <div id="exactBox">
-        <label for="exactKg">Peso total (kg)</label>
+        <label for="exactKg">Peso objetivo (kg)</label>
         <input id="exactKg" type="number" step="0.01" value="132.5" />
       </div>
 
-      <div id="rangeBox" style="display:none">
+      <div id="percentBox" style="display:none">
         <div class="row">
           <div>
-            <label for="minKg">Desde (kg)</label>
-            <input id="minKg" type="number" step="0.1" value="120" />
+            <label for="rmKg">RM (kg)</label>
+            <input id="rmKg" type="number" step="0.5" value="200" />
           </div>
           <div>
-            <label for="maxKg">Hasta (kg)</label>
-            <input id="maxKg" type="number" step="0.1" value="140" />
-          </div>
-          <div>
-            <label for="stepKg">Step (kg)</label>
-            <input id="stepKg" type="number" step="0.1" value="0.5" />
+            <label for="rmPct">% de RM</label>
+            <input id="rmPct" type="number" step="0.5" value="80" />
           </div>
         </div>
+        <p class="hint">Objetivo calculado: <strong id="calcPreview">160.00 kg</strong></p>
       </div>
 
       <div>

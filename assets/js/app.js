@@ -7,11 +7,11 @@ import { loadState, bindStateAutosave, saveState } from "./state.js";
 const $ = (id) => document.getElementById(id);
 const modeSel = $("mode");
 const exactBox = $("exactBox");
-const rangeBox = $("rangeBox");
+const percentBox = $("percentBox");
 const exactKg = $("exactKg");
-const minKg = $("minKg");
-const maxKg = $("maxKg");
-const stepKg = $("stepKg"); // (por ahora no se usa en el filtrado, solo vista)
+const rmKg = $("rmKg");
+const rmPct = $("rmPct");
+const calcPreview = $("calcPreview");
 const tolInp = $("tol");
 const capPerWeight = $("capPerWeight");
 const sortResults = $("sortResults");
@@ -379,10 +379,32 @@ function closeConfigModalView(){
 }
 
 modeSel.addEventListener("change", ()=>{
-  const isRange = modeSel.value === "range";
-  exactBox.style.display = isRange ? "none" : "";
-  rangeBox.style.display = isRange ? "" : "none";
+  const isPercent = modeSel.value === "percent";
+  exactBox.style.display = isPercent ? "none" : "";
+  percentBox.style.display = isPercent ? "" : "none";
+  updateCalcPreview();
 });
+
+function computeTarget(){
+  if (modeSel.value === "percent"){
+    const rm = parseFloat(rmKg?.value ?? "");
+    const pct = parseFloat(rmPct?.value ?? "");
+    if (!Number.isFinite(rm) || !Number.isFinite(pct)) return null;
+    return rm * (pct / 100);
+  }
+  const target = parseFloat(exactKg?.value ?? "");
+  if (!Number.isFinite(target)) return null;
+  return target;
+}
+
+function updateCalcPreview(){
+  if (modeSel.value !== "percent") return;
+  const t = computeTarget();
+  calcPreview.textContent = Number.isFinite(t) ? `${t.toFixed(2)} kg` : "—";
+}
+
+rmKg?.addEventListener("input", updateCalcPreview);
+rmPct?.addEventListener("input", updateCalcPreview);
 
 configResetBtn?.addEventListener("click", resetToDefaults);
 openConfigBtn?.addEventListener("click", () => {
@@ -405,28 +427,14 @@ function runSearch(resetRange = true){
   const sortResMode = sortResults?.value || "closest_plates";
   const unitFilter = unitFilterSel?.value || "any";
 
-  let target = null;
-  let minTotal;
-  let maxTotal;
-  let tolerance = 0;
-  let extraMargin = 0.25;
+  const target = computeTarget();
+  if (!Number.isFinite(target)){ alert("Peso objetivo inválido"); return; }
 
-  if (modeSel.value === "exact"){
-    target = parseFloat(exactKg.value);
-    if (!Number.isFinite(target)){ alert("Peso inválido"); return; }
-    tolerance = parseFloat(tolInp.value || "0.05");
-    if (!Number.isFinite(tolerance) || tolerance < 0) tolerance = 0;
-    minTotal = target - tolerance;
-    maxTotal = target + tolerance;
-    extraMargin = Math.max(0.1, tolerance * 1.5);
-  } else {
-    const a = parseFloat(minKg.value);
-    const b = parseFloat(maxKg.value);
-    if (!Number.isFinite(a) || !Number.isFinite(b) || b < a){ alert("Rango inválido"); return; }
-    minTotal = a;
-    maxTotal = b;
-    extraMargin = 0.5;
-  }
+  let tolerance = parseFloat(tolInp.value || "0.05");
+  if (!Number.isFinite(tolerance) || tolerance < 0) tolerance = 0;
+  const minTotal = target - tolerance;
+  const maxTotal = target + tolerance;
+  const extraMargin = Math.max(0.1, tolerance * 1.5);
 
   const itemsRaw = generateCombos(DATA.meta, DATA.prefs, {
     minTotal,
@@ -463,7 +471,6 @@ function runSearch(resetRange = true){
 
   const itemsFiltered = itemsRaw.filter(it => it.minPlates >= minVal && it.minPlates <= maxVal);
 
-  // Ordena resultados (tarjetas)
   const items = sortResultsArray(itemsFiltered, sortResMode, target);
   render(results, items, { target });
   saveState();
@@ -482,6 +489,7 @@ unitFilterSel?.addEventListener("change", () => runSearch(true));
   await loadData();
   applyStoredConfig();
   renderConfigPanel();
+  updateCalcPreview();
 
   // Registrar SW (HTTPS/localhost)
   if ("serviceWorker" in navigator) {
